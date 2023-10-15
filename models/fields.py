@@ -3,21 +3,32 @@ import validators
 
 class BaseField:
     default_validators = []
+    empty_values = (None, "", [], (), {})
 
-    def __init__(self, required=True, validators=()):
+    def __init__(self, required=True, default=None, validators=()):
         self.required = required
+        self.default = default
         self.validators = [*self.default_validators, *validators]
 
     def __set__(self, instance, value):
         self.run_validators(value)
         instance.__dict__[self.name] = value
 
+    def __get__(self, instance, owner):
+        i = instance.__dict__.get(self.name)
+        if i is None and self.required and self.default is None:
+            raise ValueError('Required fields cannot have empty value')
+        if i is None and self.default is not None:
+            self.run_validators(self.default)
+            return self.default
+        return i
+
     def __set_name__(self, owner, name):
         self.name = name
 
     def run_validators(self, value):
-        for validate in self.validators:
-            validate(value)
+        for validator in self.validators:
+            validator(value)
 
 
 class CharField(BaseField):

@@ -8,15 +8,15 @@ def validate_length(value):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=8)
-    age = models.CharField(max_length=2, validators=(validate_length, ))
+    name = models.CharField(max_length=8, default='Jennifer')
+    age = models.CharField(max_length=2, required=False)
 
     def __str__(self):
         return f"Name: {self.name}, Age: {self.age}"
 
 
-person1 = Person.add(name="John Doe", age="0")
-person2 = Person.add(name="Jane Doe", age="233")
+person1 = Person.add()
+person2 = Person.add(name="Jane Doe", age="23")
 
 for person in Person.all():
     print(person)
