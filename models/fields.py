@@ -1,19 +1,22 @@
 class BaseField:
     default_validators = []
-    value = None
+    _value = None
 
     def __init__(self, required=True, validators=()):
         self.required = required
         self.validators = [*self.default_validators, *validators]
 
-    def __set__(self, instance, value):
-        self.run_validators(value)
+    @property
+    def value(self):
+        return self._value
 
-    def __get__(self, instance, owner):
-        return self.value
+    @value.setter
+    def value(self, value):
+        for validate in self.validators:
+            validate(value)
+        self._value = value
 
     def run_validators(self, value):
-        self.value = value
         for validate in self.validators:
             validate(value)
 
