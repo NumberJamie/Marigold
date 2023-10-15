@@ -6,6 +6,7 @@ class BaseValidator:
         self.error = error or self.error
 
     def __call__(self, value):
+        value = str(value) if type(value) == int else value
         if not self.compare(value, self.limit_value):
             raise ValueError(self.error.format(limit_value=self.limit_value))
 

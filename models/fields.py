@@ -1,3 +1,5 @@
+import re
+
 import validators
 
 
@@ -40,6 +42,24 @@ class CharField(BaseField):
             self.validators.append(validators.MaxLengthValidator(limit_value=self.max_length))
         if min_length is not None:
             self.validators.append(validators.MinLengthValidator(limit_value=self.min_length))
+
+
+class IntegerField(BaseField):
+    regex = re.compile(r'^\d+$')
+
+    def __init__(self, min_length=None, max_length=None, **kwargs):
+        self.max_length = max_length
+        self.min_length = min_length
+        super().__init__(**kwargs)
+        if max_length is not None:
+            self.validators.append(validators.MaxLengthValidator(limit_value=self.max_length))
+        if min_length is not None:
+            self.validators.append(validators.MinLengthValidator(limit_value=self.min_length))
+        self.validators.append(self.validate)
+
+    def validate(self, value):
+        if not re.match(self.regex, str(value)) and self.required:
+            raise ValueError('IntegerField needs to be a whole number.')
 
 
 class BooleanField(BaseField):
