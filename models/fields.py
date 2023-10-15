@@ -1,3 +1,6 @@
+import validators
+
+
 class BaseField:
     default_validators = []
 
@@ -18,11 +21,11 @@ class BaseField:
 
 
 class CharField(BaseField):
-    def __init__(self, max_length, **kwargs):
+    def __init__(self, min_length=None, max_length=None, **kwargs):
         self.max_length = max_length
+        self.min_length = min_length
         super().__init__(**kwargs)
-        self.validators.append(self.validate_length)
-
-    def validate_length(self, value):
-        if len(value) > self.max_length:
-            raise ValueError(f'Value exceeds max length of {self.max_length}')
+        if max_length is not None:
+            self.validators.append(validators.MaxLengthValidator(limit_value=self.max_length))
+        if min_length is not None:
+            self.validators.append(validators.MinLengthValidator(limit_value=self.min_length))
