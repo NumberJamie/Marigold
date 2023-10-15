@@ -1,2 +1,2 @@
 from .model import Model
-from .fields import CharField
+from .fields import CharField, BooleanField

@@ -40,3 +40,13 @@ class CharField(BaseField):
             self.validators.append(validators.MaxLengthValidator(limit_value=self.max_length))
         if min_length is not None:
             self.validators.append(validators.MinLengthValidator(limit_value=self.min_length))
+
+
+class BooleanField(BaseField):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.validators.append(self.validate)
+
+    def validate(self, value):
+        if not type(value) == bool and self.required:
+            raise ValueError('BooleanField has to be of type bool.')
