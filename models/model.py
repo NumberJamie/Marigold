@@ -6,7 +6,7 @@ class Model:
         self.data.append(self)
 
     @classmethod
-    def add(cls, **kwargs):
+    def create(cls, **kwargs):
         instance = cls()
         for key, value in kwargs.items():
             setattr(instance, key, value)

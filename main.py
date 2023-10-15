@@ -16,8 +16,8 @@ class Person(models.Model):
         return f"Name: {self.name}, Age: {self.age}, Home: {self.is_home}"
 
 
-person1 = Person.add(age=1, is_home=True)
-person2 = Person.add(name="Jane Doe", age=23)
+person1 = Person.create(age=1, is_home=True)
+person2 = Person.create(name="Jane Doe", age=23)
 
 for person in Person.all():
     print(person)
