@@ -1,1 +1,1 @@
-from .validators import MaxLengthValidator, MinLengthValidator
+from .validators import MaxLengthValidator, MinLengthValidator, RegexValidator

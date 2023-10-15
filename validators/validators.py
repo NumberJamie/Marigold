@@ -1,3 +1,6 @@
+import re
+
+
 class BaseValidator:
     error = 'Something went wrong.'
 
@@ -29,3 +32,10 @@ class MinLengthValidator(BaseValidator):
     @staticmethod
     def compare(value, limit):
         return len(value) >= limit
+
+
+class RegexValidator(BaseValidator):
+    @staticmethod
+    def compare(value, limit):
+        return re.match(limit, str(value)) and value is not None
+

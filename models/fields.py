@@ -55,11 +55,8 @@ class IntegerField(BaseField):
             self.validators.append(validators.MaxLengthValidator(limit_value=self.max_length))
         if min_length is not None:
             self.validators.append(validators.MinLengthValidator(limit_value=self.min_length))
-        self.validators.append(self.validate)
-
-    def validate(self, value):
-        if not re.match(self.regex, str(value)) and self.required:
-            raise ValueError('IntegerField needs to be a whole number.')
+        self.validators.append(validators.RegexValidator(limit_value=self.regex,
+                                                         error='IntegerField needs to be a whole number.'))
 
 
 class BooleanField(BaseField):
