@@ -28,6 +28,14 @@ class BaseField:
     def __set_name__(self, owner, name):
         self.name = name
 
+    def get_info(self):
+        return {
+            "type": self.__class__.__name__,
+            "required": self.required,
+            "default": self.default,
+            "validators": self.validators
+        }
+
     def run_validators(self, value):
         for validator in self.validators:
             validator(value)
@@ -65,5 +73,5 @@ class BooleanField(BaseField):
         self.validators.append(self.validate)
 
     def validate(self, value):
-        if not type(value) == bool and self.required:
+        if type(value) is not bool and self.required:
             raise ValueError('BooleanField has to be of type bool.')

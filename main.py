@@ -21,3 +21,6 @@ person2 = Person.create(name="Jane Doe", age=23)
 
 for person in Person.all():
     print(person)
+
+fields_info = Person.get_fields_recursively()
+print(fields_info)
