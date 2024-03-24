@@ -7,9 +7,10 @@ class BaseField:
     default_validators = []
     empty_values = (None, "", [], (), {})
 
-    def __init__(self, required=True, default=None, validators=()):
+    def __init__(self, required=True, primary_key=False, default=None, validators=()):
         self.required = required
         self.default = default
+        self.primary_key = primary_key
         self.validators = [*self.default_validators, *validators]
 
     def __set__(self, instance, value):
@@ -21,8 +22,11 @@ class BaseField:
         if i is None and self.required and self.default is None:
             raise ValueError('Required fields cannot have empty value')
         if i is None and self.default is not None:
-            self.run_validators(self.default)
-            return self.default
+            i = self.default
+            if callable(self.default):
+                i = self.default()
+            self.run_validators(i)
+            instance.__dict__[self.name] = i
         return i
 
     def __set_name__(self, owner, name):
@@ -33,6 +37,7 @@ class BaseField:
             "type": self.__class__.__name__,
             "required": self.required,
             "default": self.default,
+            "is_primary": self.primary_key,
             "validators": self.validators
         }
 
